@@ -8,7 +8,9 @@ from genshin_api.permissions import IsOwnerOrReadOnly
 
 
 class RecipeList(APIView):
-
+    """
+    List recipes & create if logged in
+    """
     serializer_class = RecipeSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly
@@ -36,12 +38,9 @@ class RecipeList(APIView):
 
 
 class RecipeDetail(APIView):
-    '''
-        Display individual recipe details,
-        with Edit & Delete functionality for
-        authenticated Users
-    '''
-
+    """
+    Retrieve a recipe and edit or delete if you own it
+    """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = RecipeSerializer
 
@@ -60,7 +59,6 @@ class RecipeDetail(APIView):
         )
         return Response(serializer.data)
 
-    # Edit a post
     def put(self, request, pk):
         recipe = self.get_object(pk)
         serializer = RecipeSerializer(
@@ -73,10 +71,9 @@ class RecipeDetail(APIView):
             serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )
 
-    # Delete a post
     def delete(self, request, pk):
-        post = self.get_object(pk)
-        post.delete()
+        recipe = self.get_object(pk)
+        recipe.delete()
         return Response(
             status=status.HTTP_204_NO_CONTENT
         )
