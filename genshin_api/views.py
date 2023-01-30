@@ -5,11 +5,13 @@ from .settings import (
     JWT_AUTH_SECURE,
 )
 
+
 @api_view()
 def root_route(request):
     return Response({
         'message': 'welcome to the Genshin food blog api'
     })
+
 
 @api_view(['POST'])
 def logout_route(request):
@@ -32,4 +34,4 @@ def logout_route(request):
         samesite=JWT_AUTH_SAMESITE,
         secure=JWT_AUTH_SECURE,
     )
-    return 
+    return
