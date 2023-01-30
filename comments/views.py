@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, permissions, filters
-# from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 from genshin_api.permissions import IsOwnerOrReadOnly
 from .models import Comment
 from .serializers import CommentSerializer, CommentDetailSerializer
@@ -14,12 +14,14 @@ class CommentList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     queryset = Comment.objects.all()
-    # filter_backends = [
-    #     DjangoFilterBackend,
-    # ]
-    # filterset_fields = [
-    #     'recipe',
-    # ]
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
+
+    # filter comments associated with specific recipe
+    filterset_fields = [
+        'recipe',
+    ]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
