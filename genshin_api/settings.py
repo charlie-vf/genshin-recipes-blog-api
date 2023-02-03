@@ -131,10 +131,10 @@ if "CLIENT_ORIGIN_DEV" in os.environ:
     ]
 
 # testing if this fixes the cors issue
-CSRF_TRUSTED_ORIGINS = [os.environ.get(
-    'CLIENT_ORIGIN_DEV',
-    'CLIENT_ORIGIN',
-    )]
+# CSRF_TRUSTED_ORIGINS = [os.environ.get(
+#     'CLIENT_ORIGIN_DEV',
+#     'CLIENT_ORIGIN',
+#     )]
 
 CORS_ALLOW_CREDENTIALS = True
 
