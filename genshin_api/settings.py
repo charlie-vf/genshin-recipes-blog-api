@@ -124,6 +124,22 @@ CSRF_TRUSTED_ORIGINS = [os.environ.get(
     'CLIENT_ORIGIN',
     )]
 
+CORS_ALLOWED_ORIGINS = [
+    'https://3000-charlievf-genshinrecipe-06jkc4jv60f.ws-eu85.gitpod.io',
+    'https://8000-charlievf-genshinrecipe-x9i7jy5leoc.ws-eu85.gitpod.io',
+    'https://genshin-recipes-blog.herokuapp.com',
+    'https://genshin-food-blog-api.herokuapp.com'
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
 CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'genshin_api.urls'
