@@ -1,6 +1,5 @@
 from django.db.models import Count
 from rest_framework import generics, permissions, filters
-from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from genshin_api.permissions import IsOwnerOrReadOnly
 from .models import Recipe
