@@ -1,5 +1,6 @@
 from django.db.models import Count
 from rest_framework import generics, permissions, filters
+from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from genshin_api.permissions import IsOwnerOrReadOnly
 from .models import Recipe
@@ -18,6 +19,26 @@ class RecipeList(generics.ListAPIView):
         comments_count=Count('comment', distinct=True),
         made_count=Count('made', distinct=True),
     ).order_by('-created_at')
+
+    def get(self, request):
+        recipes = Recipe.objects.all()
+        serializer = RecipeSerializer(
+            recipes, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = RecipeSerializer(
+            data=request.data, context={'request': request}
+        )
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
     filter_backends = [
         filters.OrderingFilter,
