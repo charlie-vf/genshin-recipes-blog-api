@@ -6,7 +6,7 @@ from .models import Recipe
 from .serializers import RecipeSerializer
 
 
-class RecipeList(generics.ListAPIView):
+class RecipeList(generics.ListCreateAPIView):
     '''
         List recipes & create if logged in
     '''
