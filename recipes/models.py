@@ -8,6 +8,8 @@ class Recipe(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)
+    ingredients = models.TextField(blank=True)
+    method = models.TextField(blank=True)
     image = models.ImageField(
         upload_to='images/', default='../ei-miko-cooking_mkhllz', blank=True
     )
