@@ -65,7 +65,6 @@ REST_AUTH_SERIALIZERS = {
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = 'DEV' in os.environ
 DEBUG = False
 
 ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST'), 'localhost']
@@ -119,11 +118,6 @@ if 'CLIENT_ORIGIN_DEV' in os.environ:
     CORS_ALLOWED_ORIGIN_REGEXES = [
         rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
     ]
-
-# CSRF_TRUSTED_ORIGINS = [os.environ.get(
-#     'CLIENT_ORIGIN_DEV',
-#     'CLIENT_ORIGIN',
-#     )]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://3000-charlievf-genshinrecipe-06jkc4jv60f.ws-eu85.gitpod.io',

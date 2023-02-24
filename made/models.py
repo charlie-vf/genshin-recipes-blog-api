@@ -7,8 +7,6 @@ class Made(models.Model):
     '''
         Made model for recipes tried by users
     '''
-    # work out a way to add additional fields, e.g. comment feedback
-    # specifically after trying recipe?
 
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     recipe = models.ForeignKey(
