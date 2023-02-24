@@ -8,6 +8,14 @@ Further documentation, including user stories, agile methodology, design reasoni
 
 This ReadMe will document API-specific content.
 
+## **Admin**
+
+The first step in this site was to set up the admin panel to monitor storage of data and create example data to ensure URLs worked accordingly in the backend.
+
+The superuser details are:
+username: felix
+password: 5863Lune
+
 ## **Apps**
 
 ### genshin_api
@@ -58,6 +66,7 @@ This app was unfortunately not fully implemented in the client site due to the p
 
 This was intended to be used in a page accessible from clicking the 'following' detail in the user stats on the client site. Following marking of this project, this will be implemented fully.
 
+
 ## **Testing**
 
 Following initial manual testing pre-development of the client site, the majority of testing was completed via the main client site.
@@ -105,6 +114,24 @@ Comments:
 - Can comment on any recipe
 - comments_count will increase by 1
 
+## **Future Features**
+
+- These are detailed in the Apps section above and namely revolve around features I ran out of time to implement due to technical issues.
+- One extra feature I would like to implement is social media sign in, as this is such a common feature of other sites it feels necessary to include it. The relevant packages have already been installed alongside other all-auth.
+
+## **Technologies & Packages**
+
+- GitHub, Git, GitPod & Heroku for code writing, version control & deployment
+- Django - primary language
+- Django Rest Framework - primary language
+- Django allauth - authentication
+- Django filters - data filtering
+- Cloudinary - image storage
+- psycopg2 - database
+- Pillow - imageField
+- Gunicorn - corsheaders
+- SimpleJWT - tokens
+
 ## **Deployment**
 
 This API project was created using a GitPod workspace, commited to Git, pushed to GitHub and deployed on Heroku.
@@ -115,20 +142,75 @@ Before deployment, ensure:
 - You have created a Procfile with the relevant information, e.g. web
 - Your requirements.txt file is up to date
 
-### Heroku Deployment
+### Deployment
 
+Environment Set-Up:
+
+To complete the following steps in Heroku, you will first need to:
+
+- Fork this repository
+
+- Visit ElephantSQL.com and create/login to your account
+- Select 'Create New Instance', choose a name, select TinyTurtle & tags can be left blank
+- Select the region which aligns with your location
+- Click 'review' to check information, then click 'Create Instance'
+- Navigate to this new database and copy the database URL
+
+- Visit Cloudinary.com and create/login to your account
+- Navigate to your Dashboard and copy your API Environment Variable
+
+In Heroku: 
+- Login/Create a new account
 - Select New App
 - Choose App name and region
 - Select Deploy & link to GitHub repository
 - Manually deploy site (can choose automatic deployment after this, if desired)
-
-Environment Set-Up:
-
 - Select Settings -> Reveal Config Vars
 - Add the following:
     - ALLOWED_HOST: URL for deployed API site
     - CLIENT_ORIGIN: URL for deployed client site
     - CLIENT_ORIGIN_DEV: URL for client site active workspace
-    - CLOUDINARY_URL: your cloudinary URL
-    - DATABASE_URL: your postgreSQL URL
-    - SECRET_KEY: the secret key you created in your workspace env.py file
+    - CLOUDINARY_URL: your Cloudinary API Environment Variable
+    - DATABASE_URL: your ElephantSQL database URL
+    - SECRET_KEY: the secret key you created in your workspace env.py file (see below)
+
+In the project workspace:
+- Install psycopg2 with the command 'pip3 install dj_database_url==0.5.0 psycopg2' to allow you to connect to your external database on ElephantSQL
+- Install gunicorn with command 'pip3 install gunicorn django-cors-headers'
+- In env.py, add 'import os' and add:
+    - os.environ['CLOUDINARY_URL'] = ['your cloudinary URL']
+    - os.environ.setdefault('SECRET_KEY', 'your secret key')
+        - you can create a new secret key in the terminal using the command 'python -c "import secrets; print(secrets.token_urlsafe())"'
+    - os.environ.setdefault("DATABASE_URL", 'your ElephantSQL database URL')
+- In settings.py:
+    - import dj_database_url
+    - update Databases with:
+        if 'DEV' in os.environ:
+            DATABASES = {
+                'default': {
+                    'ENGINE': 'django.db.backends.sqlite3',
+                    'NAME': BASE_DIR / 'db.sqlite3',
+                }
+            }
+        else:
+            DATABASES = {
+                'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+            }
+    - add to installed apps:
+        - 'cloudinary_storage',
+        - 'cloudinary',
+        - 'corsheaders',
+    - remove value for secret key and replace with:
+        - SECRET_KEY = os.getenv('SECRET_KEY')
+    - update ALLOWED_HOSTS to:
+        - ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST'), 'localhost']
+    - set debug to:
+        -  DEBUG = 'DEV' in os.environ
+        or
+        - DEBUG = False
+- Create a Procfile and add:
+    - release: python manage.py makemigrations && python manage.py migrate
+    - web: gunicorn [your main app name].wsgi
+- Ensure you update your requirements with pip freeze > requirements.txt
+- Ensure you migrate with python manage.py makemigrations and python manage.py migrate
+- Add, commit & push changes
