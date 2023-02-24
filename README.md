@@ -8,6 +8,14 @@ Further documentation, including user stories, agile methodology, design reasoni
 
 This ReadMe will document API-specific content.
 
+# Table of Contents
+- [Admin](#admin)
+- [Apps](#apps)
+- [Testing](#testing)
+- [Future Features](#future-features)
+- [Technologies & Packages](#technologies--packages)
+- [Deployment](#deployment)
+
 ## **Admin**
 
 The first step in this site was to set up the admin panel to monitor storage of data and create example data to ensure URLs worked accordingly in the backend.
@@ -127,6 +135,7 @@ Comments:
 - Django allauth - authentication
 - Django filters - data filtering
 - Cloudinary - image storage
+- ElephantSQL - database
 - psycopg2 - database
 - Pillow - imageField
 - Gunicorn - corsheaders
@@ -142,24 +151,21 @@ Before deployment, ensure:
 - You have created a Procfile with the relevant information, e.g. web
 - Your requirements.txt file is up to date
 
-### Deployment
-
 Environment Set-Up:
 
 To complete the following steps in Heroku, you will first need to:
 
 - Fork this repository
-
 - Visit ElephantSQL.com and create/login to your account
 - Select 'Create New Instance', choose a name, select TinyTurtle & tags can be left blank
 - Select the region which aligns with your location
 - Click 'review' to check information, then click 'Create Instance'
 - Navigate to this new database and copy the database URL
-
 - Visit Cloudinary.com and create/login to your account
 - Navigate to your Dashboard and copy your API Environment Variable
 
-In Heroku: 
+In Heroku:
+
 - Login/Create a new account
 - Select New App
 - Choose App name and region
@@ -175,6 +181,7 @@ In Heroku:
     - SECRET_KEY: the secret key you created in your workspace env.py file (see below)
 
 In the project workspace:
+
 - Install psycopg2 with the command 'pip3 install dj_database_url==0.5.0 psycopg2' to allow you to connect to your external database on ElephantSQL
 - Install gunicorn with command 'pip3 install gunicorn django-cors-headers'
 - In env.py, add 'import os' and add:
@@ -196,6 +203,13 @@ In the project workspace:
             DATABASES = {
                 'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
             }
+    - add 'corsheaders.middleware.CorsMiddleware', to the top of MIDDLEWARE
+    - below MIDDLEWARE, add:
+        if 'CLIENT_ORIGIN_DEV' in os.environ:
+            extracted_url = re.match(r'^.+-', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE).group(0)
+            CORS_ALLOWED_ORIGIN_REGEXES = [
+                rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
+            ]
     - add to installed apps:
         - 'cloudinary_storage',
         - 'cloudinary',
@@ -214,3 +228,13 @@ In the project workspace:
 - Ensure you update your requirements with pip freeze > requirements.txt
 - Ensure you migrate with python manage.py makemigrations and python manage.py migrate
 - Add, commit & push changes
+
+## **Issues**
+
+- Sign Out functionality not working
+    - this was due to missing 'response' in logout_route return
+
+## **Credits**
+
+- Slack for endless troubleshooting support in a way which made sense, largely revolved around helping me spot small things I had missed, for example forward slashes
+- Stack Overflow for helping with issues with CORSHeaders
