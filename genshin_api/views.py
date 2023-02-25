@@ -9,7 +9,7 @@ from .settings import (
 @api_view()
 def root_route(request):
     return Response({
-        'message': 'welcome to the Genshin food blog api'
+        'message': 'welcome to the Genshin Recipes Blog api'
     })
 
 

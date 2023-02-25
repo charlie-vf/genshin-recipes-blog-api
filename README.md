@@ -1,4 +1,4 @@
-# Genshin Food Blog API
+# Genshin Recipes Blog API
 
 Genshin Recipes Blog is a community blog created to allow players of the game to share the in-game recipes they have created in real life. Although aimed at the community, the recipes are enjoyable by anyone.
 
@@ -8,7 +8,9 @@ All models have been registered with the admin site so they are controllable the
 
 The site has full CRUD functionality to allow creation, reading, updating & deletion.
 
-The landing page for this API displays the message "welcome to the Genshin food blog api".
+The landing page for this API displays the message "welcome to the Genshin Recipes Blog api".
+
+It is designed as a central storage system for consumption by a client site.
 
 Further documentation, including user stories, agile methodology, design reasoning & implementation, main site testing etc. can be found in the ReadMe for the Client Site, [here](https://github.com/charlie-vf/genshin-recipes-blog)
 
@@ -24,7 +26,7 @@ This ReadMe will document API-specific content.
 
 ## **Admin**
 
-The first step in this site was to set up the admin panel to monitor storage of data and create example data to ensure URLs worked accordingly in the backend.
+The first step in this site was to set up the admin panel to monitor storage of data and create example data to ensure URLs worked accordingly in the backend. The admin superuser has full CRUD control over site content.
 
 The superuser details are:
 - username: felix
@@ -35,6 +37,7 @@ The superuser details are:
 ### Entity Relationship Diagram
 
 ![ERD](docs/ERD.png)
+
 
 ### genshin_api
 
@@ -58,11 +61,18 @@ There are two views:
 
 ### profiles
 
-This app holds data on user profiles. It allows users to create and update their profiles, including adding bios (field: content in model).
+This app holds data on user profiles. It allows users on the front-end to create and update their profiles, including adding bios (stored as field: content in model).
 
 The serializer allows tracking of number of recipes, followers and following which are displayed on the user's profiles on the client site.
 
-If the user does not choose to edit their profile with a new image, it will be set to a default image which is the same as the Recipe Blog's logo.
+If the user does not choose to edit their profile with a new image on the front-end site, it will be set to a default image which is the same as the Recipe Blog's logo.
+
+There are two views:
+
+- One to create new profiles and hold their recipe, following & followers counts
+- Second to retrieve profile data and update/delete it
+
+There are a number of filtering options available from the API end, including ordering by most recently created profiles and profiles which are following specific other profiles.
 
 ### likes & made
 
@@ -76,7 +86,7 @@ The made model was initially set to include more functionality, including commen
 
 This app handles commenting functionality. As with all other models, comments are displayed in descending order with the most recent first.
 
-The first serializer allows comments to display the user's name & profile image, and the time the comment was created (or updated). It uses django's naturaltime import to display the date in a more readable manner. The second allows the editing option to auto-fill to make things easier for the user.
+The first serializer allows comments to display the user's name & profile image, and the time the comment was created (or updated). It uses django's naturaltime import to display the date in a more readable manner. The second allows the editing and deleting.
 
 ### followers
 
@@ -91,7 +101,9 @@ This was intended to be used in a page accessible from clicking the 'following' 
 
 Following initial automatic and manual testing pre-development of the client site, the majority of testing was completed via the main client site.
 
-Initial testing inside this project can be found in the test.py files inside the recipes and profiles folders.
+In early development, a profile & recipe was created in the local admin site to test data sending.
+
+Initial automatic testing inside this project can be found in the test.py files inside the recipes and profiles folders.
 
 ### PEP8
 
@@ -102,7 +114,7 @@ All python code passes through Code Institute's [Python Linter](https://pep8ci.h
 
 1. Profiles
 
-A profile was created using the Sign Up option on the client site and cross-checked in the API's [profile URL](https://genshin-food-blog-api.herokuapp.com/profiles/).
+A profile was created using the Sign Up option on the client site and cross-checked in the API's [profile list](https://genshin-food-blog-api.herokuapp.com/profiles/).
 
 Through this, I ensured new profiles were successfully created and stored in the back-end, as well as relevant features such as whether the user logged in is the owner(is_owner), biography (listed back-end as 'content'), number of recipes, number of followers, number of followed users, and profile image.
 
@@ -118,48 +130,51 @@ Editing and deleting recipe data was, again, tested by performing these actions 
 
 3. Liking, marking as made & commenting on recipes.
 
-Again, this was tested by performing the above actions on a recipe the logged in user of the client site does not own and checking the relevant changes occured back-end.
+Again, these were tested by performing the above actions on recipes on the client site and checking the relevant changes occured back-end.
 
 All field data declared in models displays correctly and updates in real-time.
 
 Likes:
 
-- /likes
-- Can like a recipe the user does not own & like_count will increase by 1
-- Can unlike a recipe the user does not own & like_count will decrease by 1
+- /likes/
+- Can like a recipe the user does not own & likes_count will increase by 1
+- Can unlike a recipe the user does not own & likes_count will decrease by 1
 - Cannot like a recipe the user owns & warning message is displayed
 - Likes display in admin site at /admin/likes
+- Can delete likes from the admin site
 - Newly liked recipe added to favourites page on client site
 
 Made:
 
-- /made
+- /made/
 - Can mark any recipe as made
 - made_count will increase by 1
 - Mades display in admin site at /admin/made
+- Can delete made from the admin site
 - Newly made recipe added to made page on client site
 
 Comments:
 
-- /comments
+- /comments/
 - Can comment on any recipe
 - Comments display in admin site at /admin/comments
+- Can delete comments from the admin site
 - comments_count will increase by 1
 
 Followers:
 
-- /followers
+- /followers/
 - Can follow other users
 - Can unfollow other users
 - Can change the owner of the follow and who they are following
 - Followers display in admin site at /admin/followers
 - Recipes from followed users display on following page on client site
 
-Via /admin, the admin superuser has full control over all actions on the site.
+All the above feature, at minimum, a ListCreateAPIView and a RetrieveDestroyAPIView.
 
 ## **Future Features**
 
-- These are detailed in the Apps section above, as well as the Genshin Recipes Blog repo, and namely revolve around features I ran out of time to implement due to technical issues.
+- These are detailed in the Apps section above, as well as the Genshin Recipes Blog ReadMe, and namely revolve around features I ran out of time to implement due to technical issues.
 - One extra feature I would like to implement is social media sign in, as this is such a common feature of other sites it feels necessary to include it. The relevant packages have already been installed alongside other all-auth.
 
 ## **Technologies & Packages**
@@ -192,14 +207,14 @@ Before final deployment, ensure:
 
 Environment Set-Up:
 
-To complete the following steps in Heroku, you will first need to:
+To complete the following steps in Heroku and the project workspace, you will first need to:
 
 - Clone/Fork this repository:
     - Beneath the repository name, click 'Code' and copy the clone HTTPS
     - Open your preferred IDE & navigate into the working directory you wish to clone into
     - Type 'git clone', paste the copied HTTPS & press enter
 
-- To setup with external database and image cloud storage: 
+- Setup with external database and image cloud storage: 
     - Visit ElephantSQL.com and create/login to your account
     - Select 'Create New Instance', choose a name, select TinyTurtle & tags can be left blank
     - Select the region which aligns with your location
@@ -297,6 +312,8 @@ In the project workspace:
     - set debug to:
         -  DEBUG = 'DEV' in os.environ
 
+        if using DEV in env.py
+        
         or
 
         - DEBUG = False
@@ -317,5 +334,6 @@ Resolved:
 
 ## **Credits**
 
+- [LucidChart](https://lucid.app/) for ERD sketch
 - Slack for endless troubleshooting support in a way which made sense, largely revolved around helping me spot small things I had missed, for example forward slashes
 - Stack Overflow for helping with issues with CORSHeaders
