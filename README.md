@@ -4,6 +4,10 @@ Genshin Recipes Blog is a community blog created to allow players of the game to
 
 This repository houses all the back-end functionality for storing user data sent from the client site.
 
+All models have been registered with the admin site so they are controllable there.
+
+The site has full CRUD functionality to allow creation, reading, updating & deletion.
+
 Further documentation, including user stories, agile methodology, design reasoning & implementation, main site testing etc. can be found in the ReadMe for the Client Site, [here](https://github.com/charlie-vf/genshin-recipes-blog)
 
 This ReadMe will document API-specific content.
@@ -21,10 +25,14 @@ This ReadMe will document API-specific content.
 The first step in this site was to set up the admin panel to monitor storage of data and create example data to ensure URLs worked accordingly in the backend.
 
 The superuser details are:
-username: felix
-password: 5863Lune
+- username: felix
+- password: 5863Lune
 
 ## **Apps**
+
+### Entity Relationship Diagram
+
+![ERD](docs/ERD.png)
 
 ### genshin_api
 
@@ -80,6 +88,10 @@ This was intended to be used in a page accessible from clicking the 'following' 
 Following initial manual testing pre-development of the client site, the majority of testing was completed via the main client site.
 
 Initial testing inside this project can be found in the test.py files inside the recipes and profiles folders.
+
+### Pep8
+
+All code passes through Code Institute's [Python Linter](https://pep8ci.herokuapp.com/) with no errors.
 
 
 ### Client-BackEnd cross-testing
@@ -155,7 +167,10 @@ Environment Set-Up:
 
 To complete the following steps in Heroku, you will first need to:
 
-- Fork this repository
+- Clone/Fork this repository:
+    - Beneath the repository name, click 'Code' and copy the clone HTTPS
+    - Open your preferred IDE & navigate into the working directory you wish to clone into
+    - Type 'git clone', paste the copied HTTPS & press enter
 - Visit ElephantSQL.com and create/login to your account
 - Select 'Create New Instance', choose a name, select TinyTurtle & tags can be left blank
 - Select the region which aligns with your location
@@ -184,7 +199,7 @@ In the project workspace:
 
 - Install psycopg2 with the command 'pip3 install dj_database_url==0.5.0 psycopg2' to allow you to connect to your external database on ElephantSQL
 - Install gunicorn with command 'pip3 install gunicorn django-cors-headers'
-- In env.py, add 'import os' and add:
+- In env.py (create if haven't already), add 'import os' and add:
     - os.environ['CLOUDINARY_URL'] = ['your cloudinary URL']
     - os.environ.setdefault('SECRET_KEY', 'your secret key')
         - you can create a new secret key in the terminal using the command 'python -c "import secrets; print(secrets.token_urlsafe())"'
