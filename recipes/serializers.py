@@ -4,6 +4,10 @@ from likes.models import Likes
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    '''
+        Serializer for Recipe model
+    '''
+
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')

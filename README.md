@@ -28,9 +28,6 @@ This ReadMe will document API-specific content.
 
 The first step in this site was to set up the admin panel to monitor storage of data and create example data to ensure URLs worked accordingly in the backend. The admin superuser has full CRUD control over site content.
 
-The superuser details are:
-- username: felix
-- password: 5863Lune
 
 ## **Apps**
 
@@ -99,11 +96,11 @@ This was intended to be used in a page accessible from clicking the 'following' 
 
 ## **Testing**
 
-Following initial automatic and manual testing pre-development of the client site, the majority of testing was completed via the main client site.
+Following initial automatic and manual testing pre-development of the client site, the majority of testing was completed via the main client site with checks against the backend.
 
 In early development, a profile & recipe was created in the local admin site to test data sending.
 
-Initial automatic testing inside this project can be found in the test.py files inside the recipes and profiles folders.
+Automatic testing inside this project can be found in the test.py files inside the recipes and profiles folders.
 
 ### PEP8
 
@@ -180,16 +177,15 @@ All the above feature, at minimum, a ListCreateAPIView and a RetrieveDestroyAPIV
 ## **Technologies & Packages**
 
 - GitHub, Git, GitPod & Heroku for code writing, version control & deployment
-- Django - primary language
-- Django Rest Framework - primary language
+- Python - efficient abstraction
+- Django REST Framework - full functionality for serialization etc.
 - Django allauth - authentication
-- Django filters - data filtering
 - Cloudinary - image storage
 - ElephantSQL - database
 - psycopg2 - database
 - Pillow - imageField
 - Gunicorn - corsheaders
-- SimpleJWT - tokens
+- SimpleJWT - access tokens
 
 ## **Set Up & Deployment**
 
@@ -203,6 +199,10 @@ Before final deployment, ensure:
 - You have created a Procfile with the relevant information, e.g. web
 - Your requirements.txt file is up to date
 - You have migrated all models
+- You have pushed all code to GitHub
+    - git add .
+    - git commit -m 'commit message'
+    - git push
 - Your secret key is hidden
 
 Environment Set-Up:
@@ -213,6 +213,7 @@ To complete the following steps in Heroku and the project workspace, you will fi
     - Beneath the repository name, click 'Code' and copy the clone HTTPS
     - Open your preferred IDE & navigate into the working directory you wish to clone into
     - Type 'git clone', paste the copied HTTPS & press enter
+    - Push your repository to GitHub (see above)
 
 - Setup with external database and image cloud storage: 
     - Visit ElephantSQL.com and create/login to your account
@@ -246,7 +247,8 @@ In the project workspace:
 - Install Pillow with the command 'pip3 install Pillow'
 - Install psycopg2 with the command 'pip3 install dj_database_url==0.5.0 psycopg2' to allow you to connect to your external database on ElephantSQL
 - Install gunicorn with command 'pip3 install gunicorn django-cors-headers'
-- In env.py (create if haven't already), add 'import os' and add:
+- In env.py (create if haven't already & ensure it's in .gitignore), add:
+    - import os
     - os.environ['CLOUDINARY_URL'] = ['your cloudinary URL']
     - os.environ.setdefault('SECRET_KEY', 'your secret key')
         - you can create a new secret key in the terminal using the command 'python -c "import secrets; print(secrets.token_urlsafe())"'
@@ -321,7 +323,7 @@ In the project workspace:
     - release: python manage.py makemigrations && python manage.py migrate
     - web: gunicorn [your main app name].wsgi
 - Ensure you update your requirements.txt with pip freeze > requirements.txt
-- Ensure you migrate with python manage.py makemigrations and python manage.py migrate
+- Ensure you migrate any models with python manage.py makemigrations and python manage.py migrate
 - Add, commit & push changes
 - Manually deploy on Heroku again (not necessary if enabled automatic deployment)
 
@@ -335,5 +337,6 @@ Resolved:
 ## **Credits**
 
 - [LucidChart](https://lucid.app/) for ERD sketch
+- Code Institute DRF-API walkthrough
 - Slack for endless troubleshooting support in a way which made sense, largely revolved around helping me spot small things I had missed, for example forward slashes
 - Stack Overflow for helping with issues with CORSHeaders
